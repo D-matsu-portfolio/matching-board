@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Button, Card, Form, Spinner, Alert, Modal, Row, Col } from 'react-bootstrap';
 
-export default function Companies({ session }) {
+export default function Companies({ session, onUpdate }) {
   const [loading, setLoading] = useState(true);
   const [companies, setCompanies] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -53,9 +53,15 @@ export default function Companies({ session }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, description, website } = currentCompany;
-    const { user } = session;
-
+    
     try {
+      setLoading(true);
+      setError(null);
+      // Get the most up-to-date user session information
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("User not found.");
+
       if (isEditing) {
         const { error } = await supabase
           .from('companies')
@@ -71,8 +77,11 @@ export default function Companies({ session }) {
       
       fetchCompanies();
       handleCloseModal();
+      if (onUpdate) onUpdate(); // Notify parent component
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,6 +91,7 @@ export default function Companies({ session }) {
         const { error } = await supabase.from('companies').delete().eq('id', companyId);
         if (error) throw error;
         fetchCompanies();
+        if (onUpdate) onUpdate(); // Notify parent component
       } catch (error) {
         setError(error.message);
       }

@@ -120,14 +120,14 @@ export default function Applicants({ session }) {
               <tr key={app.id}>
                 <td>{app.profiles?.full_name || app.profiles?.username || 'N/A'}</td>
                 <td>
-                  <Link to={`/postings/${app.postings.id}`}>
-                    {app.postings.title}
+                  <Link to={`/postings/${app.postings?.id}`}>
+                    {app.postings?.title || '削除された募集'}
                   </Link>
                 </td>
                 <td>{new Date(app.created_at).toLocaleString()}</td>
                 <td><Badge bg="primary">{app.status}</Badge></td>
                 <td>
-                  <Button variant="outline-primary" size="sm" onClick={() => handleMessageClick(app)}>
+                  <Button variant="outline-primary" size="sm" onClick={() => handleMessageClick(app)} disabled={!app.profiles || !app.postings}>
                     メッセージを送る
                   </Button>
                 </td>

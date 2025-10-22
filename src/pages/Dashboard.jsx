@@ -14,7 +14,10 @@ export default function Dashboard() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0); // Add this state
   const navigate = useNavigate();
+
+  const triggerRefresh = () => setRefreshKey(prev => prev + 1); // Add this function
 
   useEffect(() => {
     const getSession = async () => {
@@ -65,10 +68,10 @@ export default function Dashboard() {
               <MyApplications session={session} />
             </Tab>
             <Tab eventKey="companies" title="企業管理">
-              <Companies session={session} />
+              <Companies session={session} onUpdate={triggerRefresh} />
             </Tab>
             <Tab eventKey="postings" title="募集管理">
-              <Postings session={session} />
+              <Postings session={session} key={refreshKey} />
             </Tab>
             <Tab eventKey="applicants" title="応募者管理">
               <Applicants session={session} />

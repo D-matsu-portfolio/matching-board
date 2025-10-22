@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import Notifications from './Notifications';
 
 export default function Header() {
   const [session, setSession] = useState(null);
@@ -39,7 +40,8 @@ export default function Header() {
           <Nav>
             {session ? (
               <>
-                <Nav.Link as={Link} to="/dashboard" className="me-2">
+                <Notifications session={session} />
+                <Nav.Link as={Link} to="/dashboard" className="ms-2 me-2">
                   <Button variant="outline-primary" size="sm">ダッシュボード</Button>
                 </Nav.Link>
                 <Button variant="danger" size="sm" onClick={handleSignOut}>ログアウト</Button>

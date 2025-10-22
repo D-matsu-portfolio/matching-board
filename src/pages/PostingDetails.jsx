@@ -80,13 +80,25 @@ export default function PostingDetails() {
     }
     try {
       setApplicationStatus({ ...applicationStatus, loading: true });
-      const { error } = await supabase
+      const userId = session.user.id;
+
+      // Self-healing: Ensure a profile exists for the user before applying.
+      // An upsert will create the profile if it's missing, fixing inconsistent data.
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({ id: userId });
+      
+      if (profileError) throw profileError;
+
+      // Now that the profile is guaranteed to exist, create the application.
+      const { error: applicationError } = await supabase
         .from('applications')
         .insert({
-          user_id: session.user.id,
+          user_id: userId,
           posting_id: posting.id,
         });
-      if (error) throw error;
+      if (applicationError) throw applicationError;
+
       setApplicationStatus({ applied: true, loading: false });
       alert('応募が完了しました！');
     } catch (err) {

@@ -4,7 +4,7 @@ import { Container, Card, Form, Button, Alert, Tabs, Tab } from 'react-bootstrap
 import { useNavigate } from 'react-router-dom';
 
 export default function AuthPage() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', fullName: '' });
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,11 +20,24 @@ export default function AuthPage() {
     setError(null);
     setMessage(null);
     try {
-      const { error } = await supabase.auth.signUp({
+      // Step 1: Sign up the user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
       });
-      if (error) throw error;
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("Signup successful, but no user data returned.");
+
+      // Step 2: Immediately create a profile for the new user
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: authData.user.id,
+          full_name: formData.fullName, // Use full_name from the form
+        });
+      
+      if (profileError) throw profileError;
+
       setMessage('登録確認メールを送信しました。メールボックスを確認してください。');
     } catch (error) {
       setError(error.message);
@@ -44,7 +57,7 @@ export default function AuthPage() {
         password: formData.password,
       });
       if (error) throw error;
-      navigate('/dashboard'); // Redirect to dashboard on successful login
+      navigate('/dashboard');
     } catch (error) {
       setError(error.message);
     } finally {
@@ -64,11 +77,11 @@ export default function AuthPage() {
               <Form onSubmit={handleSignIn}>
                 <Form.Group className="mb-3" controlId="signInEmail">
                   <Form.Label>メールアドレス</Form.Label>
-                  <Form.Control type="email" name="email" placeholder="you@example.com" value={formData.email} onChange={handleInputChange} required />
+                  <Form.Control type="email" name="email" placeholder="you@example.com" onChange={handleInputChange} required />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="signInPassword">
                   <Form.Label>パスワード</Form.Label>
-                  <Form.Control type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required />
+                  <Form.Control type="password" name="password" placeholder="Password" onChange={handleInputChange} required />
                 </Form.Group>
                 <div className="d-grid">
                   <Button variant="primary" type="submit" disabled={loading}>
@@ -79,13 +92,17 @@ export default function AuthPage() {
             </Tab>
             <Tab eventKey="signup" title="新規登録">
               <Form onSubmit={handleSignUp}>
+                <Form.Group className="mb-3" controlId="signUpFullName">
+                  <Form.Label>氏名</Form.Label>
+                  <Form.Control type="text" name="fullName" placeholder="山田 太郎" onChange={handleInputChange} required />
+                </Form.Group>
                 <Form.Group className="mb-3" controlId="signUpEmail">
                   <Form.Label>メールアドレス</Form.Label>
-                  <Form.Control type="email" name="email" placeholder="you@example.com" value={formData.email} onChange={handleInputChange} required />
+                  <Form.Control type="email" name="email" placeholder="you@example.com" onChange={handleInputChange} required />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="signUpPassword">
                   <Form.Label>パスワード</Form.Label>
-                  <Form.Control type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required />
+                  <Form.Control type="password" name="password" placeholder="6文字以上" onChange={handleInputChange} required />
                 </Form.Group>
                 <div className="d-grid">
                   <Button variant="success" type="submit" disabled={loading}>
