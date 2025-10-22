@@ -1,0 +1,31 @@
+ 【引継ぎ用プロンプト】
+
+  こんにちは。Webアプリケーション「matching-board」の開発
+  を再開します。
+
+  プロジェクト概要:
+   - 名称: matching-board
+   - 技術スタック: React (Vite + JavaScript), Supabase,
+     GitHub, Render
+   - プロジェクトディレクトリ:
+     C:\Users\daish\Gemini_Cli\matching-board
+
+  完了済みの作業 (フェーズ1):
+   1. Viteを使い、ローカルにReactプロジェクトを作成しました
+      。
+   2. Supabase上にプロジェクトとpostsテーブル（id,
+      created_at, title, content）を作成しました。
+   3. Reactプロジェクトに@supabase/supabase-jsをインストール
+      し、src/supabaseClient.jsを作成済みです。
+   4. コードをGitHubリポジトリにプッシュしました。
+   5. Renderへのデプロイ手順の確認が完了しました。
+
+  次のタスク:
+  これから、アプリケーションの具体的なUI構築と機能実装（
+  フェーズ2）を開始します。
+  最初のステップとして、Supabaseに接続し、`posts`テーブル
+  からデータを取得して、Reactアプリの画面に一覧表示する機
+  能を実装したいです。
+
+  まず、src/supabaseClient.jsにSupabaseのAPIキーを設定す
+  るところから始めてください。
