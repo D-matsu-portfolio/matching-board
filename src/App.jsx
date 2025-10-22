@@ -1,56 +1,43 @@
-import { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import AuthPage from './pages/AuthPage';
+import Dashboard from './pages/Dashboard';
+import PublicPostings from './pages/PublicPostings';
+import PostingDetails from './pages/PostingDetails';
+import MessagesPage from './pages/MessagesPage';
 import './App.css';
 
-function App() {
-  const [posts, setPosts] = useState([]);
-  const [post, setPost] = useState({ title: "", content: "" });
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  async function fetchPosts() {
-    const { data } = await supabase.from('posts').select();
-    setPosts(data);
-  }
-
-  async function createPost() {
-    await supabase.from('posts').insert({ title: post.title, content: post.content });
-    fetchPosts();
-    setPost({ title: "", content: "" }); // フォームをクリア
-  }
-
+// Layout component to wrap pages with Header and Footer
+function AppLayout() {
   return (
-    <div>
-      <h1>Matching Board</h1>
-      
-      {/* 投稿フォーム */}
-      <input
-        type="text"
-        placeholder="Title"
-        value={post.title}
-        onChange={e => setPost({ ...post, title: e.target.value })}
-      />
-      <textarea
-        placeholder="Content"
-        value={post.content}
-        onChange={e => setPost({ ...post, content: e.target.value })}
-      />
-      <button onClick={createPost}>Create Post</button>
-
-      <hr />
-
-      {/* 投稿一覧 */}
-      <div>
-        {posts.map((post) => (
-          <div key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-          </div>
-        ))}
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Header />
+      <main style={{ flex: 1 }}>
+        <Outlet /> 
+      </main>
+      <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Routes with Header and Footer */}
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<PublicPostings />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/postings/:id" element={<PostingDetails />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/messages/:conversationId" element={<MessagesPage />} />
+        </Route>
+
+        {/* Route without Header and Footer (e.g., login page) */}
+        <Route path="/login" element={<AuthPage />} />
+      </Routes>
+    </Router>
   );
 }
 
