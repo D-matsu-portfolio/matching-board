@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import PublicPostings from './pages/PublicPostings';
 import PostingDetails from './pages/PostingDetails';
 import MessagesPage from './pages/MessagesPage';
+import HomePage from './pages/HomePage'; // Import the new HomePage
 import './App.css';
 
 // Layout component to wrap pages with Header and Footer
@@ -27,7 +28,8 @@ function App() {
       <Routes>
         {/* Routes with Header and Footer */}
         <Route element={<AppLayout />}>
-          <Route path="/" element={<PublicPostings />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/postings" element={<PublicPostings />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/postings/:id" element={<PostingDetails />} />
           <Route path="/messages" element={<MessagesPage />} />

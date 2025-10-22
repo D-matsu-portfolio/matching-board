@@ -29,12 +29,12 @@ export default function Header() {
     <Navbar bg="white" expand="lg" className="border-bottom shadow-sm sticky-top">
       <Container>
         <Navbar.Brand as={Link} to="/" className="fw-bold">
-          Matching Board
+          JobLink
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">募集一覧</Nav.Link>
+            <Nav.Link as={Link} to="/postings">募集一覧</Nav.Link>
             {session && <Nav.Link as={Link} to="/messages">メッセージ</Nav.Link>}
           </Nav>
           <Nav>

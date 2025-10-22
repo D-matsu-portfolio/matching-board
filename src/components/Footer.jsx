@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="py-4 mt-auto bg-light">
       <Container className="text-center">
         <small className="text-muted">
-          &copy; {new Date().getFullYear()} Matching Board. All Rights Reserved.
+          &copy; {new Date().getFullYear()} JobLink. All Rights Reserved.
         </small>
       </Container>
     </footer>

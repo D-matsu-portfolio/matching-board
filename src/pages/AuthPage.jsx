@@ -68,7 +68,7 @@ export default function AuthPage() {
   return (
     <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
       <Card style={{ width: '100%', maxWidth: '450px' }}>
-        <Card.Header as="h3" className="text-center">Matching Board</Card.Header>
+        <Card.Header as="h3" className="text-center">JobLink</Card.Header>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           {message && <Alert variant="success">{message}</Alert>}

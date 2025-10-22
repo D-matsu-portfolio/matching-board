@@ -1,10 +1,10 @@
  【引継ぎ用プロンプト】
 
-  こんにちは。Webアプリケーション「matching-board」の開発
+  こんにちは。Webアプリケーション「JobLink」の開発
   を再開します。
 
   プロジェクト概要:
-   - 名称: matching-board
+   - 名称: JobLink
    - 技術スタック: React (Vite + JavaScript), Supabase,
      GitHub, Render
    - プロジェクトディレクトリ:

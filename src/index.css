@@ -1,3 +1,12 @@
+:root {
+  --bs-primary: #0d6efd; /* Default Bootstrap Blue for reference */
+  --bs-primary-rgb: 13, 110, 253;
+
+  /* JobLink Custom Theme */
+  --bs-primary: #2c5282; /* A deep, professional blue */
+  --bs-primary-rgb: 44, 82, 130;
+}
+
 html, body, #root {
   height: 100%;
   width: 100%;
