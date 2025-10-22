@@ -1,7 +1,24 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { Container, Row, Col, Card, Spinner, Alert, Form, Button, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Alert, Form, Button, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+// Helper function to generate a simple avatar placeholder
+const CompanyLogo = ({ company, size = 50 }) => {
+  const placeholder = `https://ui-avatars.com/api/?name=${encodeURIComponent(company?.name || 'C')}&background=random&size=${size*2}&color=fff`;
+  // In a real app, you'd fetch the logo_url from storage. For now, we assume it's a full URL.
+  const logoUrl = company?.logo_url || placeholder;
+
+  return (
+    <img 
+      src={logoUrl} 
+      alt={`${company?.name || 'Company'} logo`}
+      width={size} 
+      height={size} 
+      className="rounded-3 me-3"
+    />
+  );
+};
 
 export default function PublicPostings() {
   const [postings, setPostings] = useState([]);
@@ -47,10 +64,9 @@ export default function PublicPostings() {
       }
     };
 
-    // Debounce search to avoid excessive API calls
     const timerId = setTimeout(() => {
       fetchPostings();
-    }, 500); // Fetch after 500ms of inactivity
+    }, 500);
 
     return () => clearTimeout(timerId);
   }, [searchTerm, locationFilter]);
@@ -60,7 +76,7 @@ export default function PublicPostings() {
       <Container style={{ maxWidth: '1140px', width: '100%' }}>
         <h1 className="mb-4">募集一覧</h1>
 
-        <Card className="mb-4 p-3">
+        <Card className="mb-4 p-3 shadow-sm">
           <Form>
             <Row className="align-items-end gy-2">
               <Col xs={12} md={5}>
@@ -97,41 +113,37 @@ export default function PublicPostings() {
         </Card>
 
         {loading ? (
-          <div className="text-center"><Spinner animation="border" /></div>
+          <div className="text-center py-5"><Spinner animation="border" /></div>
         ) : error ? (
           <Alert variant="danger">エラーが発生しました: {error}</Alert>
         ) : postings.length === 0 ? (
-          <p>該当する募集はありません。</p>
+          <Card className="text-center p-5">
+            <p className="mb-0">該当する募集はありません。</p>
+          </Card>
         ) : (
           <Row>
             {postings.map((posting) => (
-              <Col md={6} lg={4} key={posting.id} className="mb-4">
-                <Card className="h-100">
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>{posting.title}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{posting.companies?.name || '不明な企業'}</Card.Subtitle>
-                    <Card.Text className="flex-grow-1" style={{
-                      display: '-webkit-box',
-                      WebkitBoxOrient: 'vertical',
-                      WebkitLineClamp: 3,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      minHeight: '72px'
-                    }}>
-                      {posting.description}
-                    </Card.Text>
-                    <div className="mt-auto">
-                      <small className="text-muted">勤務地: {posting.location || '未定'}</small>
+              <Col md={12} key={posting.id} className="mb-3">
+                <Card className="h-100 shadow-sm">
+                  <Card.Body className="d-flex align-items-center">
+                    <CompanyLogo company={posting.companies} />
+                    <div className="flex-grow-1">
+                      <Card.Title className="mb-1">{posting.title}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">{posting.companies?.name || '不明な企業'}</Card.Subtitle>
+                      <div>
+                        {posting.location && <Badge pill bg="secondary" className="me-1 fw-normal">{posting.location}</Badge>}
+                        {posting.position_type && <Badge pill bg="info" className="fw-normal">{posting.position_type}</Badge>}
+                      </div>
+                    </div>
+                    <div className="ms-auto text-end">
+                      <Link to={`/postings/${posting.id}`} className="btn btn-primary">
+                        詳細を見る
+                      </Link>
+                      <small className="d-block text-muted mt-2">
+                        {new Date(posting.created_at).toLocaleDateString()}
+                      </small>
                     </div>
                   </Card.Body>
-                  <Card.Footer className="d-flex justify-content-between align-items-center">
-                    <small className="text-muted">
-                      投稿日: {new Date(posting.created_at).toLocaleDateString()}
-                    </small>
-                    <Link to={`/postings/${posting.id}`} className="btn btn-primary btn-sm">
-                      詳細を見る
-                    </Link>
-                  </Card.Footer>
                 </Card>
               </Col>
             ))}

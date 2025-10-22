@@ -1,8 +1,4 @@
 :root {
-  --bs-primary: #0d6efd; /* Default Bootstrap Blue for reference */
-  --bs-primary-rgb: 13, 110, 253;
-
-  /* JobLink Custom Theme */
   --bs-primary: #2c5282; /* A deep, professional blue */
   --bs-primary-rgb: 44, 82, 130;
 }
@@ -12,7 +8,13 @@ html, body, #root {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa; /* A light grey background for the whole page */
+}
+
+body {
+  font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+  background-color: #f8f9fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -20,18 +22,21 @@ html, body, #root {
   flex-direction: column;
 }
 
-/* This ensures that our main content area in each page is what gets centered */
 .page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  padding: 2rem; /* Increased padding for more whitespace */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700; /* Bolder headings */
 }
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
   .page-container {
-    padding: 10px;
+    padding: 1rem;
   }
 }
